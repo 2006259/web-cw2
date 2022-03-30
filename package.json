@@ -1,0 +1,20 @@
+{
+  "name": "webcw2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main_html.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main_html.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2006259/web-cw2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/2006259/web-cw2/issues"
+  },
+  "homepage": "https://github.com/2006259/web-cw2#readme"
+}
