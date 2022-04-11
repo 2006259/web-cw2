@@ -1,0 +1,67 @@
+<html>
+	<head>
+		<title>Login</title>
+		<link rel="stylesheet" href="./resources/styles.css">
+	</head>
+
+	<body onload="makeRequest();">
+
+		<script>
+	  		var req;
+	
+			function makeRequest() {
+				console.log("made request");
+			    if (window.XMLHttpRequest) {
+			        req = new XMLHttpRequest();
+	    		}
+	    		else if (window.ActiveXObject) {
+	        		req = new ActiveXObject("Msxml2.XMLHTTP");
+	    		}
+	    		else {
+	    			// Ajax not supported
+					return;
+	    		}
+	
+				req.onreadystatechange = function() {
+					var txt = "";
+	    			if (this.readyState == 4 && this.status == 200) {
+						var response = this.responseText;
+						console.log (response);
+	     				document.getElementById("answer").innerHTML = response;
+	    			}
+				};
+	
+			}
+	
+			function signup() {
+				username = document.getElementById("username").value;
+				password = document.getElementById("password").value;
+				req.open("GET", "/signup?username=" + username + "&password=" + password, true);
+				req.send();
+			}
+		</script>
+	
+		<header>	
+			<div class="banner">
+				<h1>LOVE FOR UGLIES</h1>
+				<img src="./resources/logo.png" alt="mole rat guy">
+				<a class="bannerBtn loginBtn" href="login.html">Log in</a>
+				<br>
+				<a class="bannerBtn signupBtn" href="signup.html">Sign up</a>
+			</div>		
+		</header>
+
+		<p class="welcome">
+			Sign up
+		</p>
+
+		<p id="answer">server response</p>
+
+		<p>Username: <input type = "text" id = "username"></input></p>
+		<p>Password: <input type = "password" id = "password"></input></p>
+
+		<input type = "button" value = "Confirm" onclick = "signup();" />
+
+	</body>
+
+</html>
