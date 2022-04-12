@@ -1,0 +1,70 @@
+<html>
+	<head>
+		<title>Love For Uglies</title>
+		<link rel="stylesheet" href="resources/styles.css">
+	</head>
+
+<header>	
+	<div class="banner">
+		<h1>LOVE FOR UGLIES</h1>
+		<img src="./resources/logo.png" alt="mole rat guy">
+		<a class="bannerBtn loginBtn" href="login.html">Log out</a>
+	</div>		
+</header>
+
+<body onload="makeRequest();">
+
+	<script>
+	  	var req;
+	
+		function makeRequest() {
+	    	if (window.XMLHttpRequest) {
+	    	    req = new XMLHttpRequest();
+	    	}
+	    	else if (window.ActiveXObject) {
+	    	    req = new ActiveXObject("Msxml2.XMLHTTP");
+	    	}
+	    	else {
+	    		// Ajax not supported
+				return;
+	    	}
+		
+			req.onreadystatechange = function() {
+				var txt = "";
+	    		if (this.readyState == 4 && this.status == 200) {
+					var response = this.responseText;
+					console.log (response);
+	    	 		document.getElementById("answer").innerHTML = response;
+	    		}
+			};	
+		}
+	
+		function doStuff() {
+			currentPassword = document.getElementById ("currentPassword").value;
+			newUsername = document.getElementById ("newUsername").value;
+			newPassword = document.getElementById ("newPassword").value;
+	
+		  	req.open("GET", "/updateProfile?currentPassword=" + currentPassword + "&newUsername=" + newUsername + "&newPassword=" + newPassword, true);
+			req.send();
+			//var params = 'input1=' + input1 + '&input2=' + input2;
+			//req.open('POST', '/login?', true);
+			//req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			//req.send(params);
+	
+		}
+	</script>
+
+	<p class="welcome">
+		<p>Current name : <%= username %></p>
+		<p>New name : <input id="newUsername" type="text"></input></p>
+		<p>New password : <input id="newPassword" type="password"></input></p>
+		<p>Date joined : <%= joinedTime %></p>
+
+		<p>Enter current password to confirm changes:<input id="currentPassword" type="password"></input></p>
+
+		<input type = "button" value = "Confirm" onclick = "update();" />
+	</p>
+
+</body>
+
+</html>

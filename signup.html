@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title>Login</title>
-		<link rel="stylesheet" href="./resources/styles.css">
+		<link rel="stylesheet" href="resources/styles.css">
 	</head>
 
 	<body onload="makeRequest();">
@@ -46,21 +46,19 @@
 				<h1>LOVE FOR UGLIES</h1>
 				<img src="./resources/logo.png" alt="mole rat guy">
 				<a class="bannerBtn loginBtn" href="login.html">Log in</a>
-				<br>
 				<a class="bannerBtn signupBtn" href="signup.html">Sign up</a>
 			</div>		
 		</header>
 
-		<p class="welcome">
-			Sign up
-		</p>
+		<div class="welcome">
+			<p>Sign up</p>
+			<p id="answer"></p>
 
-		<p id="answer">server response</p>
+			<p>Username: <input type = "text" id = "username"></input></p>
+			<p>Password: <input type = "password" id = "password"></input></p>
 
-		<p>Username: <input type = "text" id = "username"></input></p>
-		<p>Password: <input type = "password" id = "password"></input></p>
-
-		<input type = "button" value = "Confirm" onclick = "signup();" />
+			<input type = "button" value = "Confirm" onclick = "signup();" />
+		</div>
 
 	</body>
 
