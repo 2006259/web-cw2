@@ -28,6 +28,11 @@ const UserSchema = new mongoose.Schema({
   	type: Boolean,
   	default: false
   },
+  score: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
   hashed_password: {
     type: String,
     required: "Password is required"

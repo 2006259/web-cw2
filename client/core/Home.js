@@ -7,7 +7,7 @@ import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 import myImg from './../assets/images/myimage.png'
 import {Link} from 'react-router-dom'
-import {joke} from '../thirdparty/api-dadjokes.js'
+//import {joke} from '../thirdparty/api-dadjokes.js'
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -36,16 +36,16 @@ const useStyles = makeStyles(theme => ({
 
 export default function Home(){
   const classes = useStyles()
-  const [jokes, setJokes] = useState({
+  /*const [jokes, setJokes] = useState({
     joke: 'No joke',
     error: ''
-  })
+  })*/
 
   useEffect(() => {
     const abortController = new AbortController()
     const signal = abortController.signal
 
-    joke(signal).then((data) => {
+    /*joke(signal).then((data) => {
       if (data && data.error) {
         //console.log("error in getting jokes: " + data.error)
         //setJokes(...jokes, error: data.error)
@@ -56,7 +56,7 @@ export default function Home(){
           setJokes(data)
         }
       }
-    })
+    })*/
 
     return function cleanup(){
       abortController.abort()
@@ -77,7 +77,7 @@ export default function Home(){
             <Typography variant="body1" component="p">
               Welcome to L4U home page.
               <div>
-              {jokes.joke}
+
               </div>
             </Typography>
           </CardContent>

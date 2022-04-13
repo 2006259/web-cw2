@@ -86,7 +86,6 @@ export default function Profile({ match }) {
           <ListItem>
             <ListItemText primary={user.about}/>
           </ListItem>
-
           <Divider/>
           <ListItem>
             <ListItemText primary={"Joined: " + (
