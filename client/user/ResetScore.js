@@ -9,57 +9,51 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import auth from './../auth/auth-helper'
-import {remove} from './api-user.js'
-import {Redirect} from 'react-router-dom'
+import {resetscore} from "./api-user";
 
-export default function DeleteUser(props) {
-  const [open, setOpen] = useState(false)
-  const [redirect, setRedirect] = useState(false)
+export default function ResetScore(props) {
+    const [open, setOpen] = useState(false)
 
-  const jwt = auth.isAuthenticated()
+    const jwt = auth.isAuthenticated()
 
-  const clickButton = () => {
-    console.log(props)
-    setOpen(true)
-  }
+    const clickButton = () => {
+        console.log(props)
+        setOpen(true)
+    }
 
-  const deleteAccount = () => { 
-    remove({
-      userId: props.userId
-    }, {t: jwt.token}).then((data) => {
-      if (data && data.error) {
-        console.log(data.error)
-      } else {
-        auth.clearJWT(() => console.log('deleted'))
-        setRedirect(true)
-      }
-    })
-  }
+    const resetScore = () => {
+        resetscore({
+            userId: props.userId
+        }, {t: jwt.token}).then((data) => {
+            if (data && data.error) {
+                console.log(data.error)
+            } else {
+                setOpen(false)
+            }
+        })
+    }
 
-  const handleRequestClose = () => {
-    setOpen(false)
-  }
+    const handleRequestClose = () => {
+        setOpen(false)
+    }
 
-  if (redirect) {
-    return <Redirect to='/'/>
-  }
     return (<span>
       <IconButton aria-label="Delete" onClick={clickButton} color="secondary">
         <DeleteIcon/>
       </IconButton>
 
       <Dialog open={open} onClose={handleRequestClose}>
-        <DialogTitle>{"Delete Account"}</DialogTitle>
+        <DialogTitle>{"Reset high score"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Confirm to delete your account.
+            Confirm to clear your previous high score.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleRequestClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={deleteAccount} color="secondary" autoFocus="autoFocus">
+          <Button onClick={resetScore} color="secondary" autoFocus="autoFocus">
             Confirm
           </Button>
         </DialogActions>
@@ -67,7 +61,7 @@ export default function DeleteUser(props) {
     </span>)
 
 }
-DeleteUser.propTypes = {
-  userId: PropTypes.string.isRequired
+ResetScore.propTypes = {
+    userId: PropTypes.string.isRequired
 }
 

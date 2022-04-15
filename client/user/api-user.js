@@ -95,11 +95,49 @@ const remove = async (params, credentials) => {
   }
 }
 
+const resetscore = async (params, credentials) => {
+  try {
+    console.log("resetscore apiusers")
+    let response = await fetch('/api/users/score/reset/' + params.userId, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + credentials.t
+      }
+    })
+    return await response.json()
+  } catch(err) {
+    console.log(err)
+  }
+}
+
+const updatescore = async (params, credentials, user) => {
+  console.log("updatescore apiuser")
+  try {
+    console.log(user)
+    let response = await fetch('/api/users/score/' + params.userId, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + credentials.t
+      },
+      body: JSON.stringify(user)
+    })
+    return await response.json()
+  } catch(err) {
+    console.log(err)
+  }
+}
+
 export {
   create,
   list,
   listadmin,
   read,
   update,
-  remove
+  remove,
+  updatescore,
+  resetscore
 }

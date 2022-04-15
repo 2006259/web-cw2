@@ -5,7 +5,7 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
-import myImg from './../assets/images/myimage.png'
+import myImg from './../assets/images/babyboy.jpg'
 import {Link} from 'react-router-dom'
 //import {joke} from '../thirdparty/api-dadjokes.js'
 
@@ -70,15 +70,11 @@ export default function Home(){
           <Typography variant="h6" className={classes.title}>
             Home Page
           </Typography>
-          <Link to="/users"> Users </Link>
           <CardMedia className={classes.media} image={myImg} title="My Image"/>
-          <Typography variant="body2" component="p" className={classes.credit} color="textSecondary">Photo: Chompster</Typography>
+          <Typography variant="body2" component="p" className={classes.credit} color="textSecondary">Photo: everythingreptile.com</Typography>
           <CardContent>
             <Typography variant="body1" component="p">
-              Welcome to L4U home page.
-              <div>
-
-              </div>
+              Welcome to L4U home page. Lorem ipsum, etc.
             </Typography>
           </CardContent>
         </Card>

@@ -16,6 +16,7 @@ import DeleteUser from './DeleteUser'
 import auth from './../auth/auth-helper'
 import {read} from './api-user.js'
 import {Redirect, Link} from 'react-router-dom'
+import ResetScore from "./ResetScore";
 
 const useStyles = makeStyles(theme => ({
   root: theme.mixins.gutters({
@@ -92,7 +93,12 @@ export default function Profile({ match }) {
               new Date(user.created)).toDateString()}/>
           </ListItem>
           <ListItem>
-            <ListItemText primary={"Profile edits:" + user.profileclicks}/>
+            <ListItemText primary={"Profile edits: " + user.profileclicks}/>
+          </ListItem>
+
+          <ListItem>
+            <ListItemText primary={"Game high score: " + user.score}/>
+            <ResetScore userId={user._id}/>
           </ListItem>
 
         </List>

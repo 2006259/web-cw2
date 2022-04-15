@@ -15,7 +15,8 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import auth from './../auth/auth-helper'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import {Link, Redirect} from 'react-router-dom'
-import {read} from "./api-user";
+import {read, update, updatescore} from "./api-user";
+
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -146,27 +147,43 @@ function drawGame(){
     //dessin outer ring
 
     string+="<circle cx=\""+rayon+"\" cy=\""+rayon+"\" r=\""+rayon+"\" stroke=\"black\" stroke-width=\"3\" fill-opacity=\"0\"/>"
+    string+= `    
+        <style>
+            .cat { font: 35px sans-serif; }
+            .roof {font: bold 70px sans-serif;}
+        </style>
+        `
 
     for(let i=0;i<nbPoints;i++){
 
         //set couleur de la cible
 
-        if(game.targetRing[i]){
-            if(targetIsHit(i)){
-                string+="<g stroke=\"green\" stroke-width=\"3\" fill=\"green\">"
-            } else {
-                string+="<g stroke=\"red\" stroke-width=\"3\" fill=\"red\">"
-            }
-        } else {
-            string+="<g stroke=\"gray\" stroke-width=\"3\" fill=\"gray\">"
-        }
-
-        //tracer la cible
+        let color
+        let smile
 
         angle = theta*i
         let x = (rayon * Math.cos(angle))+centerX
         let y = (rayon * Math.sin(angle))+centerY
-        string+= "<rect x=\""+(x-2.5)+"\" y=\""+(y-7.5)+"\" width=\"5\" height=\"15\" transform=\"rotate("+i*(360/nbPoints)+","+x+","+y+")\"/></g>"
+
+        if(game.targetRing[i]){
+            if(targetIsHit(i)){
+                color = 'green'
+                smile=':)'
+            } else {
+                color='red'
+                smile=':('
+            }
+            string += `
+            <g x="${x}" y="${y}">
+                <ellipse cx="${x}" cy="${y}" rx="15" ry="25" transform="rotate(${i*(360/nbPoints)},${x},${y})" stroke="${color}" stroke-width="3" fill="${color}"/>
+                <text x="${x}" y="${y}" transform="rotate(${(i*(360/nbPoints))+90},${x},${y})" stroke="${color}" stroke-width="3" fill="${color}" class="cat" text-anchor="middle">O  O</text>
+                <text x="${x}" y="${y}" transform="rotate(${(i*(360/nbPoints))+180},${x},${y})" stroke="black" font-size="25px" text-anchor="middle">${smile}</text>
+            </g>                        
+            `
+        } else {
+            color='gray'
+            string+= "<rect x=\""+(x-2.5)+"\" y=\""+(y-7.5)+"\" width=\"15\" height=\"15\" transform=\"rotate("+i*(360/nbPoints)+","+x+","+y+")\"/></g>"
+        }
     }
 
     //dessin inner rings
@@ -246,17 +263,37 @@ function drawGame(){
                         x = (rayon * Math.cos(angle))+centerX
                         y = (rayon * Math.sin(angle))+centerY
                         let color
+                        let smile
                         if(laserHitsTarget(j,i)){
                             color = "green"
                         } else {
                             color = "red"
                         }
-                        string+= "<rect x=\""+(x-1.5)+"\" y=\""+(y-4)+"\" width=\"3\" height=\"8\" stroke=\""+color+"\" stroke-width=\"3\" fill=\""+color+"\" transform=\"rotate("+j*(360/nbPoints)+","+x+","+y+")\"/>"
+                        string+= "<rect x=\""+(x-10)+"\" y=\""+(y-15)+"\" width=\"30\" height=\"30\" stroke=\""+color+"\" stroke-width=\"3\" fill=\""+color+"\" transform=\"rotate("+j*(360/nbPoints)+","+x+","+y+")\"/>"
+                        string += `
+                            <text class="roof" x="${x}" y="${y}" transform="rotate(${j*(360/nbPoints)+90},${x},${y})" text-anchor="middle">^</text>
+                        `
+                        //string+= `<image href="./../assets/images/evil.jpeg" width="15" height="40" transform="rotate(${j*(360/nbPoints)},${x},${y})"/>`
+                        /*string += `
+                            <g x="${x}" y="${y}">
+                                <ellipse cx="${x}" cy="${y}" rx="15" ry="25" transform="rotate(${j*(360/nbPoints)},${x},${y})" stroke="${color}" stroke-width="3" fill="${color}"/>
+                                <text x="${x}" y="${y}" transform="rotate(${(j*(360/nbPoints))+90},${x},${y})" stroke="${color}" stroke-width="3" fill="${color}" class="cat" text-anchor="middle">O  O</text>
+                                <text x="${x}" y="${y}" transform="rotate(${(j*(360/nbPoints))+180},${x},${y})" stroke="black" font-size="25px" text-anchor="middle">${smile}</text>
+                            </g>                        
+                        `*/
+
                         break
                     case 2:
                         x = (rayon * Math.cos(angle))+centerX
                         y = (rayon * Math.sin(angle))+centerY
-                        string+= "<rect x=\""+(x-2.5)+"\" y=\""+(y-2.5)+"\" width=\"5\" height=\"5\" stroke=\"blue\" stroke-width=\"3\" fill=\"blue\" transform=\"rotate("+j*(360/nbPoints)+","+x+","+y+")\"/>"
+                        //string+= "<rect x=\""+(x-2.5)+"\" y=\""+(y-2.5)+"\" width=\"5\" height=\"5\" stroke=\"blue\" stroke-width=\"3\" fill=\"blue\" transform=\"rotate("+j*(360/nbPoints)+","+x+","+y+")\"/>"
+                        string += `
+                            <g x="${x}" y="${y}">
+                                <ellipse cx="${x}" cy="${y}" rx="15" ry="25" transform="rotate(${j*(360/nbPoints)},${x},${y})" stroke="blue" stroke-width="3" fill="blue"/>
+                                <text x="${x}" y="${y}" transform="rotate(${(j*(360/nbPoints))+90},${x},${y})" stroke="blue" stroke-width="3" fill="blue" class="cat" text-anchor="middle">AA</text>
+                                <text x="${x}" y="${y}" transform="rotate(${(j*(360/nbPoints))+180},${x},${y})" stroke="black" font-size="25px" text-anchor="middle">:3</text>
+                            </g>
+                        `
                         break
                     default :
                         break
@@ -282,6 +319,12 @@ function resetGame(){
 
 export default function Game({ match }) {
     const classes = useStyles()
+
+    const [values, setValues] = useState({
+        score: 0,
+        won: false
+    })
+
     const [user, setUser] = useState({})
     const [redirectToSignin, setRedirectToSignin] = useState(false)
     const jwt = auth.isAuthenticated()
@@ -306,62 +349,76 @@ export default function Game({ match }) {
 
     }, [match.params.userId])
 
-    const [values, setValues] = useState({
-        won: false
-    })
-
-    if (redirectToSignin) {
-        return <Redirect to='/signin'/>
-    }
-
-    var highScoreString = '';
+    var highScore = false;
 
     function redraw(r, cc){
         rotateRing(r,cc)
         console.log("rotations : "+nbRotations)
         drawGame()
         if(isWin()){
-            setValues({won: true})
-            if(user.score !== undefined) {
+            setValues({score: nbRotations, won: true})
+            console.log(user)
+            if(user.score !== 0) {
+                console.log('replacing high score')
                 if (nbRotations < user.score) {
-                    setUser({...user, score: nbRotations })
-                    highScoreString = "New High Score!"
-                    resetGame()
+                    setHighScore(nbRotations)
                 }
             } else {
                 console.log('replacing undefined high score')
-                setUser({...user, score: nbRotations })
-                highScoreString = "New High Score!"
-                resetGame()
+                setHighScore(nbRotations)
             }
         }
+    }
+
+    function setHighScore(score){
+        const user = {
+            score: score || 0,
+        }
+        updatescore({
+            userId: match.params.userId
+        }, {
+            t: jwt.token
+        }, user).then((data) => {
+            if (data && data.error) {
+                setValues({...values, score: nbRotations})
+            }
+        })
+        highScore = true
+        resetGame()
+    }
+
+    if (redirectToSignin) {
+        return <Redirect to='/signin'/>
     }
 
     return (<div>
             <Card className={classes.card}>
                 <CardContent>
-                    <Typography variant="h6" className={classes.title}>
-                        Line up the ugly animals with their new owners, but don't let the pretty ones block them!
+                    <Typography variant="h4" className={classes.title}>
+                        Find a welcoming home for every ugly rat, but don't let the pretty kitties block their path!
                     </Typography>
                 </CardContent>
                 <div>
+                    <Typography variant="h6" className={classes.title}>
+                        Use these buttons to rotate the animal rings!
+                    </Typography>
                     <CardActions>
-                        <button color="primary" variant="contained" onClick={() => redraw(3,0)}>R3 to the right</button> <br></br>
-                        <button color="primary" variant="contained" onClick={() => redraw(2,0)}>R2 to the right</button> <br></br>
-                        <button color="primary" variant="contained" onClick={() => redraw(1,0)}>R1 to the right</button> <br></br>
+                        <button color="primary" variant="contained" onClick={() => redraw(3,0)}>Outer ring clockwise</button> <br></br>
+                        <button color="primary" variant="contained" onClick={() => redraw(2,0)}>Middle ring clockwise</button> <br></br>
+                        <button color="primary" variant="contained" onClick={() => redraw(1,0)}>Innermost ring clockwise</button> <br></br>
 
-                        <button color="primary" variant="contained" onClick={() => redraw(3,1)}>R3 to the left</button> <br></br>
-                        <button color="primary" variant="contained" onClick={() => redraw(2,1)}>R2 to the left</button> <br></br>
-                        <button color="primary" variant="contained" onClick={() => redraw(1,1)}>R1 to the left</button> <br></br>
+                        <button color="primary" variant="contained" onClick={() => redraw(3,1)}>Outer ring counter-clockwise</button> <br></br>
+                        <button color="primary" variant="contained" onClick={() => redraw(2,1)}>Middle ring counter-clockwise</button> <br></br>
+                        <button color="primary" variant="contained" onClick={() => redraw(1,1)}>Innermost ring counter-clockwise</button> <br></br>
                     </CardActions>
                 </div>
-                <div id="test" onLoad={() => drawGame()}></div>
+                <div id="test" onLoad={() => drawGame()}>Press a button to start playing...</div>
             </Card>
             <Dialog open={values.won} disableBackdropClick={false}>
                 <DialogTitle>Congratulations</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        You won in {nbRotations} rotations! {highScoreString}
+                        You won in {values.score} rotations!
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

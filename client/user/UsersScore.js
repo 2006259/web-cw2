@@ -46,29 +46,25 @@ export default function UsersScore() {
         }
     }, [])
 
-
     return (
         <Paper className={classes.root} elevation={4}>
             <Typography variant="h6" className={classes.title}>
-                All Users
+                Scoreboard
             </Typography>
             <List dense>
                 {users.map((item, i) => {
-                    return <div>
-                        <ListItem button>
-                            <ListItemAvatar>
-                                <Avatar>
-                                    <Person/>
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary={"User: " + item.name + " - High score: " + item.score}/>
-                            <ListItemSecondaryAction>
-                                <IconButton>
-                                    <ArrowForward/>
-                                </IconButton>
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                    </div>
+                    if(item.score>0) {
+                        return <div>
+                            <ListItem>
+                                <ListItemAvatar>
+                                    <Avatar>
+                                        <Person/>
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText primary={"Player name : " + item.name + " - High score : " + item.score}/>
+                            </ListItem>
+                        </div>
+                    }
                 })
                 }
             </List>
