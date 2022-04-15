@@ -5,19 +5,24 @@ import authCtrl from '../controllers/auth.controller'
 const router = express.Router()
 
 router.route('/api/users/admin/:userId')
-  .get(authCtrl.requireSignin, authCtrl.hasAdminAuthorization, userCtrl.listadmin)
+    .get(authCtrl.requireSignin, authCtrl.hasAdminAuthorization, userCtrl.listadmin)
 
 router.route('/api/users')
-  .get(userCtrl.list)
-  .post(userCtrl.create)
+    .get(userCtrl.list)
+    .post(userCtrl.create)
 
 router.route('/api/users/:userId')
-  .get(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.read)
-  .put(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.update)
-  .delete(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.remove)
+    .get(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.read)
+    .put(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.update)
+    .delete(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.remove)
+
+router.route('/api/users/score/reset/:userId')
+    .put(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.resetscore)
+
+router.route('/api/users/score/:userId')
+    .put(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.updatescore)
+
 
 router.param('userId', userCtrl.userByID)
-
-
 
 export default router

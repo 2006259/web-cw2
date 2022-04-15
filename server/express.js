@@ -38,7 +38,14 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(compress())
 // secure apps by setting various HTTP headers
-app.use(helmet())
+app.use(
+    helmet({
+      contentSecurityPolicy : {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "img-src": ["'self'", "https://images.pexels.com"]
+      }
+    })
+)
 // enable CORS - Cross Origin Resource Sharing
 app.use(cors())
 
